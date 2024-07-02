@@ -1,0 +1,15 @@
+services:
+  next-app:
+    image: node:latest
+    container_name: mine-dashboard
+    command: /bin/sh -c "cd /app/mine-dashboard && npm install && npm run dev"
+    ports:
+      - 80:3000
+    working_dir: /app/mine-dashboard
+    environment:
+      - WATCHPACK_POLLING=true
+    volumes:
+      - type: bind
+        source: ./mine-dashboard
+        target: /app/mine-dashboard
+    tty: true
