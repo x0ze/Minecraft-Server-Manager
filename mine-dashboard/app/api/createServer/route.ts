@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest, res: NextResponse) {
   const execSync = require("child_process").execSync;
   const output = execSync(
-    '/servers/getServer.sh "2" "1.12.2" "test-server-mohist" "2"',
+    '/servers/getServer.sh "1" "1.12.2" "test-server-forge" "2"',
     { encoding: "utf-8" }
   );
   const splitted = output.split(/\r?\n/);
