@@ -1,15 +1,20 @@
 services:
   next-app:
     image: node:latest
+    platform: linux/amd64
     container_name: mine-dashboard
-    command: /bin/sh -c "cd /app/mine-dashboard && npm install && npm run dev"
-    ports:
-      - 80:3000
-    working_dir: /app/mine-dashboard
     environment:
       - WATCHPACK_POLLING=true
+    command: /bin/sh -c "apt update && apt install -y jq && apt install -y openjdk-17-jre-headless && apt install -y screen && cd /app/mine-dashboard && npm install && apt update && npm run dev"
+    ports:
+      - 80:3000
+      - 25565:25565
+    working_dir: /app/mine-dashboard
     volumes:
       - type: bind
         source: ./mine-dashboard
         target: /app/mine-dashboard
+      - type: bind
+        source: ./servers
+        target: /servers
     tty: true

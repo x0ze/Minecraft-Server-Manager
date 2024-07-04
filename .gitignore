@@ -1,0 +1,12 @@
+*.jar
+
+/servers/java/jdk8u412-b08/
+
+/servers/forge/*
+!/servers/forge/versions/
+/servers/spigot/*
+!/servers/spigot/versions/
+/servers/mohist/*
+!/servers/mohist/versions/
+/servers/bedrock/*
+!/servers/bedrock/versions/
