@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { PanelsTopLeft } from "lucide-react";
-
+import logo from "@/app/icon.ico";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/hooks/use-store";
 import { Button } from "@/components/ui/button";
@@ -31,7 +31,7 @@ export function Sidebar() {
           asChild
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="w-6 h-6 mr-1" />
+            <img src={logo.src} className="w-9 h-9 ml-[-10px]" />
             <h1
               className={cn(
                 "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
@@ -40,7 +40,7 @@ export function Sidebar() {
                   : "translate-x-0 opacity-100"
               )}
             >
-              Brand
+              Mine-Server
             </h1>
           </Link>
         </Button>

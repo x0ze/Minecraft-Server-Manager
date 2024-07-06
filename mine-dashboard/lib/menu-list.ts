@@ -1,10 +1,12 @@
 import {
-  Tag,
   Users,
   Settings,
   Bookmark,
   SquarePen,
-  LayoutGrid
+  LayoutDashboard,
+  Server,
+  SquareTerminal,
+  Map,
 } from "lucide-react";
 
 type Submenu = {
@@ -35,47 +37,52 @@ export function getMenuList(pathname: string): Group[] {
           href: "/dashboard",
           label: "Dashboard",
           active: pathname.includes("/dashboard"),
-          icon: LayoutGrid,
-          submenus: []
-        }
-      ]
+          icon: LayoutDashboard,
+          submenus: [],
+        },
+      ],
     },
     {
-      groupLabel: "Contents",
+      groupLabel: "Servers",
       menus: [
         {
+          href: "/shell",
+          label: "Shell",
+          active: pathname.includes("/shell"),
+          icon: SquareTerminal,
+          submenus: [],
+        },
+        {
           href: "",
-          label: "Posts",
-          active: pathname.includes("/posts"),
-          icon: SquarePen,
+          label: "Servers",
+          active: pathname.includes("/server"),
+          icon: Server,
           submenus: [
             {
-              href: "/posts",
-              label: "All Posts",
-              active: pathname === "/posts"
+              href: "/server/create",
+              label: "Creation",
+              active: pathname === "/server/create",
             },
             {
-              href: "/posts/new",
-              label: "New Post",
-              active: pathname === "/posts/new"
-            }
-          ]
+              href: "/server/manage",
+              label: "Managment",
+              active: pathname === "/server/managment",
+            },
+            {
+              href: "/configuration",
+              label: "Configuration",
+              active: pathname === "/server",
+            },
+          ],
         },
         {
-          href: "/categories",
-          label: "Categories",
-          active: pathname.includes("/categories"),
-          icon: Bookmark,
-          submenus: []
+          href: "/maps",
+          label: "Maps",
+          active: pathname.includes("/ma"),
+          icon: Map,
+          submenus: [],
         },
-        {
-          href: "/tags",
-          label: "Tags",
-          active: pathname.includes("/tags"),
-          icon: Tag,
-          submenus: []
-        }
-      ]
+      ],
     },
     {
       groupLabel: "Settings",
@@ -85,16 +92,16 @@ export function getMenuList(pathname: string): Group[] {
           label: "Users",
           active: pathname.includes("/users"),
           icon: Users,
-          submenus: []
+          submenus: [],
         },
         {
           href: "/account",
           label: "Account",
           active: pathname.includes("/account"),
           icon: Settings,
-          submenus: []
-        }
-      ]
-    }
+          submenus: [],
+        },
+      ],
+    },
   ];
 }
