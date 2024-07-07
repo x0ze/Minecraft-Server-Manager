@@ -1,16 +1,7 @@
 #!/bin/bash
 # Parameter : 1=Server Version 2=server Name 3=Minecraft Version 4=Server memory
 
-if [ $1 -eq "0" ]; then
-    minecraftServer="spigot"
-elif [ $1 -eq "1" ]; then
-    minecraftServer="forge"
-elif [ $1 -eq "2" ]; then
-    minecraftServer="mohist"
-else 
-    echo "Error invalid server version"
-    exit
-fi
+minecraftServer=$1
 
 checkVersion=${3:2:2}
 if [ "$checkVersion" -lt 17 ]; then

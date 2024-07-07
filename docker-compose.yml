@@ -5,7 +5,7 @@ services:
     container_name: mine-dashboard
     environment:
       - WATCHPACK_POLLING=true
-    command: /bin/sh -c "apt update && apt install -y jq && apt install -y openjdk-17-jre-headless && apt install -y screen && cd /app/mine-dashboard && npm install && apt update && npm run dev"
+    command: /bin/sh -c "apt update && apt install -y jq && apt install -y openjdk-17-jre-headless && apt install -y screen && apt-get install sqlite3 && cd /app/mine-dashboard && npm install && apt update && npm run dev"
     ports:
       - 80:3000
       - 25565:25565
