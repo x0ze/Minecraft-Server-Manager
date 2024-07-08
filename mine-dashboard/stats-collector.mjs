@@ -12,56 +12,75 @@ const options = {
 async function collectStats() {
   try {
     const serverOnline = await fetch("http://localhost:3000/api/onlineServer");
-    const serverPing = await serverOnline.json();
-    const serverStatus = serverPing == "offline" ? false : true;
-    console.log(serverPing);
+    const serverCheck = await serverOnline.json();
+    const serverStatus = serverCheck === "offline" ? false : true;
     const timestamp = new Date().toISOString();
     const db = await open({
       filename: "./minecraft_stats.db",
       driver: sqlite3.Database,
     });
 
-    if (serverStatus == true) {
-      const serverName = serverPing;
-      const result = await status("localhost", 25565, options);
-      const serverPing = result.roundTripLatency;
-      const serverMotd = result.motd.clean;
-      const playerCount = result.players.online;
-      const players = result.players.sample || [];
+    const serverName = serverCheck;
+    const result = serverStatus
+      ? await status("localhost", 25565, options)
+      : null;
 
-      const serverIdRow = await db.get(
-        `SELECT id_server FROM Server WHERE server_name = ?`,
-        serverName
+    const serverPing = serverStatus ? result.roundTripLatency : null;
+    const serverMotd = serverStatus ? result.motd.clean : null;
+    const playerCount = serverStatus ? result.players.online : 0;
+    const players = serverStatus ? result.players.sample || [] : [];
+    const maxPlayer = serverStatus ? result.players.max : null;
+
+    const serverIdRow = await db.get(
+      `SELECT id_server FROM Server WHERE server_name = ?`,
+      serverName
+    );
+    const serverId = serverIdRow ? serverIdRow.id_server : null;
+
+    let playerNames = "";
+    let playerUUIDs = "";
+
+    if (players.length > 0) {
+      players.forEach((player, index) => {
+        playerNames += player.name;
+        playerUUIDs += player.id;
+        if (index < players.length - 1) {
+          playerNames += ", ";
+          playerUUIDs += ", ";
+        }
+      });
+    }
+
+    if (serverStatus) {
+      await db.run(
+        `INSERT INTO statistic_server (stats_ping, server_status, player_pseudo, player_uuid, stats_number_connected, server_max_player, time_stats, server_motd, fk_server) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        serverPing,
+        serverStatus,
+        playerNames,
+        playerUUIDs,
+        playerCount,
+        maxPlayer,
+        timestamp,
+        serverMotd,
+        serverId
       );
-      const serverId = serverIdRow ? serverIdRow.id_server : null;
-
-      for (const player of players) {
-        await db.run(
-          `INSERT INTO statistic_server (stats_ping, server_status, player_pseudo, player_uuid, stats_number_connected, server_max_player, time_stats, server_motd, fk_server) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          serverPing,
-          serverStatus,
-          player.name,
-          player.id,
-          playerCount,
-          playerCount,
-          timestamp,
-          serverMotd,
-          serverId
-        );
-      }
-      await db.close();
-
-      const logEntry = `${timestamp} - ${JSON.stringify(result)}\n`;
-      console.log("Statistiques enregistrées:", logEntry);
     } else {
       await db.run(
-        `INSERT INTO statistic_server (server_status, time_stats) VALUES (0, ?)`,
+        `INSERT INTO statistic_server (server_status, time_stats) VALUES (?, ?)`,
+        0,
         timestamp
       );
-      await db.close();
     }
+
+    await db.close();
+
+    console.log(
+      "Statistiques enregistrées:",
+      timestamp,
+      serverStatus ? result : "Serveur hors ligne"
+    );
   } catch (error) {
-    console.error("Error to get statistic :", error);
+    console.error("Erreur lors de la collecte des statistiques :", error);
   }
 }
 

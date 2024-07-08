@@ -59,7 +59,7 @@ export function AreaChartPlayerOnline(): JSX.Element {
           className="mt-4 h-72"
           data={chartdata}
           index="hour"
-          curveType="natural"
+          curveType="monotone"
           showAnimation
           allowDecimals={false}
           yAxisWidth={65}

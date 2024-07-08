@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest, res: NextResponse) {
   const { serverId } = await req.json();
   const db: Database = await open({
     filename: "./minecraft_stats.db",
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   await db.close();
   const execSync = require("child_process").execSync;
   const output = execSync(
-    '/servers/stopServer.sh "${serverInfo.server_name}"',
+    `/servers/stopServer.sh "${serverInfo.server_name}"`,
     {
       encoding: "utf-8",
     }
